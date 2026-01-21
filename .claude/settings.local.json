@@ -12,7 +12,10 @@
       "Bash(then)",
       "Bash(else)",
       "Bash(grep:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(tree:*)",
+      "Bash(tmux list-sessions:*)",
+      "Bash(./export-to-project.sh:*)"
     ],
     "deny": []
   }
