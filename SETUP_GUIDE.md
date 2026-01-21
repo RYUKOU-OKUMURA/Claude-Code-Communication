@@ -18,6 +18,12 @@ tmuxとClaude Codeを使ったマルチエージェントAI組織の構築手順
 
 ## システム概要
 
+### 解説動画
+
+このシステムの解説動画がYouTubeで公開されています：
+
+[【AI組織実現‼️Claude Code Organization】現役エンジニアが「5人のAIが勝手に開発する会社」の作り方を解説！](https://www.youtube.com/watch?v=Qxus36eijkM)
+
 ### AI組織の構成
 
 ```
@@ -407,6 +413,122 @@ tmux kill-session -t multiagent
 
 ---
 
+## 実際のプロジェクト例
+
+### TODOアプリの作成
+
+社長の画面で、具体的なプロジェクトを指示してみましょう。
+
+```bash
+tmux attach-session -t president
+```
+
+```
+あなたはpresidentです。
+TODOアプリを作ってください。
+以下の機能が必要です：
+- タスクの追加
+- タスクの完了/未完了の切り替え
+- タスクの削除
+- ローカルストレージでのデータ保存
+シンプルで使いやすいUIでお願いします。
+```
+
+すると、AIチームが動き出して：
+- **worker1** がHTML/CSS/JSでUI作成
+- **worker2** がデータ管理ロジック実装
+- **worker3** がテストコード作成
+
+最終的に、完成したコードが各ディレクトリに出力されます！
+
+---
+
+## カスタマイズ
+
+### 進捗確認の間隔を変える
+
+デフォルトの進捗確認間隔を変更するには、`instructions/boss.md`を編集します。
+
+```bash
+nano instructions/boss.md
+# または
+code instructions/boss.md
+```
+
+```bash
+# デフォルト（10分）
+sleep 600
+
+# 5分に変更する場合
+sleep 300
+
+# 1分に変更する場合
+sleep 60
+```
+
+### 新しい作業者を追加
+
+AI組織に新しいメンバーを追加する方法：
+
+**1. 指示書を作成**
+
+```bash
+cp instructions/worker.md instructions/worker4.md
+```
+
+**2. `setup.sh`にペイン追加処理を追記**
+
+```bash
+# 新しいペインを作成してworker4を起動
+tmux split-window -v -t multiagent:0.3
+tmux send-keys -t multiagent:0.4 'export PS1="\[\033[01;34m\]worker4>\[\033[00m\] "' C-m
+```
+
+**3. `agent-send.sh`にマッピング追加**
+
+```bash
+worker4)  tmux send-keys -t multiagent:0.4 "$message" C-m ;;
+```
+
+---
+
+## プロンプトのコツ
+
+効果的にAIに指示を出すためのポイントです。
+
+### 良いプロンプトの例
+
+```
+【プロジェクト名】シンプルなTODOアプリ
+【ビジョン】
+ユーザーが簡単にタスクを管理できるアプリの構築
+
+【必要な機能】
+- タスクの追加
+- タスクの完了/未完了の切り替え
+- タスクの削除
+- ローカルストレージでのデータ保存
+
+【技術要件】
+- 使用言語: HTML, CSS, JavaScript
+- デザイン: シンプルでモダン
+```
+
+### 悪いプロンプトの例
+
+```
+適当にアプリ作って
+```
+
+### ポイント
+
+1. **プロジェクト名を明確にする**
+2. **具体的な機能を箇条書きで挙げる**
+3. **技術要件を指定する**
+4. **デザインの方向性を示す**
+
+---
+
 ## 他プロジェクトへの移植
 
 このシステムを他のプロジェクトディレクトリに導入するには、エクスポートスクリプトを使用します。
@@ -490,6 +612,44 @@ cd /path/to/project
 - [Claude Code公式ドキュメント](https://docs.anthropic.com/en/docs/claude-code/overview)
 - [GitHub: Claude-Code-Communication](https://github.com/Akira-Papa/Claude-Code-Communication)
 - [Qiita: tmuxでClaude CodeのMaxプランでAI組織を動かし放題](https://qiita.com/akira_papa_AI/items/9f6c6605e925a88b9ac5)
+
+---
+
+## 参考・謝辞
+
+このシステムの構築にあたり、以下の方々の情報を参考にさせていただきました。本当にありがとうございます。
+
+### システム発案者
+
+◇ **元木さん** - Claude Code双方向通信をシェルで一撃構築できるようにした発案者
+- [haconiwa/README_JA.md](https://github.com/dai-motoki/haconiwa/blob/main/README_JA.md)
+
+### 環境構築のシェア
+
+◇ **ダイコンさん** - 簡単にClaude Code双方向通信環境を構築できるようシェア
+- [nishimoto265/Claude-Code-Communication](https://github.com/nishimoto265/Claude-Code-Communication)
+- [@daikon265](https://x.com/daikon265)
+
+### その他参考情報
+
+◇ **神威/KAMUIさん** - [@kamui_qai](https://x.com/kamui_qai)
+
+◇ **Claude Code公式解説動画** - [Mastering Claude Code in 30 minutes](https://www.youtube.com/live/6eBSHbLKuN0?t=1356s)
+
+---
+
+## 関連記事（続き）
+
+AI組織フォーメーションの設計に関する続きの記事です：
+
+### 歴史上の最強組織をAI組織フォーメーションで設計
+[歴史上の最強組織を参考に、AI組織フォーメーションを考えてみた](https://qiita.com/akira_funakoshi/items/756202bff0688411c4c5)
+
+### シチュエーション別の効率的なAI組織フォーメーション
+[歴史上の社会形成理論からシチュエーション別で効率的な10のClaude Code AI組織フォーメーション](https://qiita.com/akira_funakoshi/items/3b4b5f8644c5e6e12bae)
+
+### Webサービス成功のためのフェーズ別AI組織
+[webサービスを成功させるために必要なClaude CodeのAI組織形態を、フェーズ別/シチュエーション別で考えてみた](https://qiita.com/akira_funakoshi/items/a67be1f2acbb32e6ec36)
 
 ---
 
