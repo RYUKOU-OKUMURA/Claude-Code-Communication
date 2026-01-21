@@ -15,7 +15,9 @@
       "Bash(chmod:*)",
       "Bash(tree:*)",
       "Bash(tmux list-sessions:*)",
-      "Bash(./export-to-project.sh:*)"
+      "Bash(./export-to-project.sh:*)",
+      "Bash(.ai-team/agent-send.sh:*)",
+      "Bash(.ai-team/project-status.sh:*)"
     ],
     "deny": []
   }
